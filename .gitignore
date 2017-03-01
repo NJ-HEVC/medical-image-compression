@@ -1,6 +1,7 @@
 
 .metadata
-bin/
+bin/*
+!bin/bpg/
 tmp/
 *.tmp
 *.bak

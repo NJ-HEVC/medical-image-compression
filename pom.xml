@@ -56,8 +56,35 @@
 			<artifactId>dcm4che-tool-common</artifactId>
 			<version>${dcm4che-version}</version>
 		</dependency>
-
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/bin/bpg</outputDirectory>
+							<resources>
+								<resource>
+									<directory>bin/bpg</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<properties>
 		<dcm4che-version>dcm4chee-arc-light-5.9.2</dcm4che-version>
 	</properties>
