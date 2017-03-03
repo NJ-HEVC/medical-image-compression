@@ -3,6 +3,7 @@ package com.cmput414w17.medical;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -14,17 +15,29 @@ public class TestBPGImageEncoding {
 
 	@Test
 	public void testJpegToBpgOnWindows() {
-		testImageToBpgOnWindows(new File("test.jpg"));
+		Assume.assumeTrue(SystemUtils.IS_OS_WINDOWS);
+		testImageToBpg(new File("test.jpg"));
+	}
+
+	@Test
+	public void testJpegToBpgOnLinux() {
+		Assume.assumeTrue(SystemUtils.IS_OS_LINUX);
+		testImageToBpg(new File("test.jpg"));
 	}
 
 	@Test
 	public void testPngToBpgOnWindows() {
-		testImageToBpgOnWindows(new File("test.png"));
+		Assume.assumeTrue(SystemUtils.IS_OS_WINDOWS);
+		testImageToBpg(new File("test.png"));
 	}
 
-	private void testImageToBpgOnWindows(File output) {
-		Assume.assumeTrue(System.getProperty("os.name").toLowerCase().startsWith("win"));
+	@Test
+	public void testPngToBpgOnLinux() {
+		Assume.assumeTrue(SystemUtils.IS_OS_LINUX);
+		testImageToBpg(new File("test.png"));
+	}
 
+	private void testImageToBpg(File output) {
 		File dicomTestFile = new File(this.getClass().getResource("test.dcm").getFile());
 		File bpgTestFile = new File("test.bpg");
 

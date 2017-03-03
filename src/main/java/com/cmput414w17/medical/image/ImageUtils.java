@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.dcm4che3.tool.dcm2jpg.Dcm2Jpg;
 
 /**
@@ -77,10 +78,14 @@ public class ImageUtils {
 					fileType));
 		}
 
-		if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+		if (SystemUtils.IS_OS_WINDOWS) {
 			// Runs on Windows only!
 			Process p = Runtime.getRuntime().exec(String.format("bin/bpg/win64/bpgenc.exe -o %s %s",
 					output.getAbsolutePath(), image.getAbsolutePath()));
+			p.waitFor();
+		} else if (SystemUtils.IS_OS_LINUX) {
+			Process p = Runtime.getRuntime()
+					.exec(String.format("bpgenc -o %s %s", output.getAbsolutePath(), image.getAbsolutePath()));
 			p.waitFor();
 		} else {
 			throw new UnsupportedOperationException("This operating system is not supported for BPG conversion!");
