@@ -42,3 +42,7 @@ BPG README: https://github.com/mirrorer/libbpg.
 * The `debian-setup.sh` contains code written by 
   Collin (http://unix.stackexchange.com/users/154766/collin) at 
   http://unix.stackexchange.com/a/259639 and licensed under the MIT license.
+
+* OpenCV segmentation and flood-fill technique inspired by  
+  Luigi De Russis's (https://github.com/luigidr) code from  
+  https://github.com/opencv-java/image-segmentation
