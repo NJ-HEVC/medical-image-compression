@@ -9,6 +9,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import com.cmput414w17.medical.image.ImageUtils;
 import com.cmput414w17.medical.image.OpenCvUtils;
 import com.cmput414w17.medical.image.UnsupportedFileTypeException;
 
@@ -26,10 +27,10 @@ public class TestImageProcessing {
 		File testFile = new File(getClass().getResource("test2.jpg").getFile());
 		File output = new File("floodfill.jpg");
 
-		output.deleteOnExit();
+		//output.deleteOnExit();
 
-		if (output.exists())
-			output.delete();
+		//if (output.exists())
+			//output.delete();
 
 		Mat frame = Imgcodecs.imread(testFile.getAbsolutePath());
 
@@ -39,6 +40,10 @@ public class TestImageProcessing {
 
 		if (!output.exists())
 			Assert.fail(String.format("%s output file not found!", output.getName()));
+	}
+	@Test
+	public void testOrganizor() throws IOException{
+		ImageUtils.organizeInput();
 	}
 
 }

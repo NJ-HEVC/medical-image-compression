@@ -41,4 +41,9 @@ public class OpenCvUtils {
 		return frame;
 	}
 
+	public static Mat findRegionOfInterest(Mat frame){
+		
+		
+		return frame;
+	}
 }

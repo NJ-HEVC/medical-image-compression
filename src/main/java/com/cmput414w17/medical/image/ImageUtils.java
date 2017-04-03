@@ -1,8 +1,15 @@
 package com.cmput414w17.medical.image;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.dcm4che3.tool.dcm2jpg.Dcm2Jpg;
@@ -90,6 +97,47 @@ public class ImageUtils {
 		} else {
 			throw new UnsupportedOperationException("This operating system is not supported for BPG conversion!");
 		}
+	}
+	
+	public static void organizeInput() throws FileNotFoundException, UnsupportedEncodingException{
+		PrintWriter writer = new PrintWriter("Image Size Distribution.txt", "UTF-8");
+		writer.println("Image Size Distribution");
+		File directory = new File("input");
+		File[] fList = directory.listFiles();
+		for (final File file : fList) {
+			String imgName = file.getName();
+			try {
+				BufferedImage img = ImageIO.read(new File("input/" + imgName));
+				
+				if(img != null){
+					int res = img.getHeight();
+					String folderName = res + "x" + res;
+					File resFolder = new File("input/" + folderName);
+					boolean exists = resFolder.exists();
+					if(exists == false){
+						resFolder.mkdir();
+						File imgFile = new File(resFolder + "/" + file.getName());
+						file.renameTo(imgFile);
+						
+					}else{
+						File imgFile = new File(resFolder + "/" + file.getName());
+						file.renameTo(imgFile);
+					}
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		fList = new File("input/512x512").listFiles();
+		writer.println("512x512: " + fList.length);
+		
+		fList = new File("input/378x378").listFiles();
+		writer.println("378x378: " + fList.length);
+		
+		writer.close();
 	}
 
 }
