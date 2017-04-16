@@ -46,3 +46,8 @@ BPG README: https://github.com/mirrorer/libbpg.
 * OpenCV segmentation and flood-fill technique inspired by  
   Luigi De Russis's (https://github.com/luigidr) code from  
   https://github.com/opencv-java/image-segmentation
+  
+* Lossless JPEG code based on code written by 
+  bobince (http://stackoverflow.com/users/18936/bobince)
+  From http://stackoverflow.com/a/7619091/2557554 and licensed under 
+  CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)

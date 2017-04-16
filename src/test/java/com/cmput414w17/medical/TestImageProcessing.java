@@ -30,10 +30,10 @@ public class TestImageProcessing {
 		File testFile = new File(getClass().getResource("test2.jpg").getFile());
 		File output = new File("floodfill.jpg");
 
-		// output.deleteOnExit();
+		output.deleteOnExit();
 
-		// if (output.exists())
-		// output.delete();
+		if (output.exists())
+		output.delete();
 
 		Mat frame = Imgcodecs.imread(testFile.getAbsolutePath());
 

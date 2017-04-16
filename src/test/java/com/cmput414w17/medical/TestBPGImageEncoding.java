@@ -58,7 +58,7 @@ public class TestBPGImageEncoding {
 		}
 
 		try {
-			ImageUtils.convertImageToBpg(output, bpgTestFile);
+			ImageUtils.convertImageToBpg(output, bpgTestFile, true);
 		} catch (IOException | InterruptedException | UnsupportedFileTypeException e) {
 			e.printStackTrace();
 			Assert.fail();

@@ -73,6 +73,9 @@ public class ImageUtils {
 	 *            The JPEG or PNG input image.
 	 * @param output
 	 *            The file to output the BPG encoded image.
+	 * @param lossless
+	 *            True if lossless output is desired; otherwise, false for lossy
+	 *            output.
 	 * @throws IOException
 	 *             Thrown if there was an I/O error while encoding the image to
 	 *             the BPG format.
@@ -82,7 +85,7 @@ public class ImageUtils {
 	 * @throws UnsupportedFileTypeException
 	 *             Thrown if the input image is not a JPEG or PNG.
 	 */
-	public static void convertImageToBpg(File image, File output)
+	public static void convertImageToBpg(File image, File output, boolean lossless)
 			throws IOException, InterruptedException, UnsupportedFileTypeException {
 		String fileType = Files.probeContentType(image.toPath());
 		if (!(fileType.equals("image/png") || fileType.equals("image/jpeg"))) {
@@ -103,6 +106,59 @@ public class ImageUtils {
 		} else {
 			throw new UnsupportedOperationException("This operating system is not supported for BPG conversion!");
 		}
+	}
+
+	/**
+	 * Converts a given image into a PNG image.
+	 * 
+	 * @param image
+	 *            The input image file.
+	 * @param output
+	 *            The PNG output image file.
+	 * @throws IOException
+	 *             Thrown if the input image could not be read or if the output
+	 *             PNG file could not be written.
+	 */
+	public static void convertImageToPng(File image, File output) throws IOException {
+		BufferedImage bufferedImage = ImageIO.read(image);
+		convertImageToPng(bufferedImage, output);
+	}
+
+	/**
+	 * Converts a given image into a PNG image.
+	 * 
+	 * @param bufferedImage
+	 *            The input image.
+	 * @param output
+	 *            The PNG output image file.
+	 * @throws IOException
+	 *             Thrown if the input image could not be read or if the output
+	 *             PNG file could not be written.
+	 */
+	public static void convertImageToPng(BufferedImage bufferedImage, File output) throws IOException {
+		convertImageToFormat(bufferedImage, output, "png");
+	}
+
+	/**
+	 * Convert a given image into a given output format.
+	 * 
+	 * @param bufferedImage
+	 *            The input image.
+	 * @param output
+	 *            The output image file.
+	 * @param format
+	 *            The format to convert the input image into.
+	 * @throws IOException
+	 *             Thrown if the input image could not be read or if the output
+	 *             file could not be written.
+	 */
+	public static void convertImageToFormat(BufferedImage bufferedImage, File output, String format)
+			throws IOException {
+		ImageIO.write(bufferedImage, format, output);
+	}
+
+	public static void convertImageToJpeg2000(File image, File output) {
+
 	}
 
 	/**

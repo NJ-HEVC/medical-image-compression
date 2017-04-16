@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestBPGImageEncoding.class, TestDicomImageConversion.class, TestImageProcessing.class })
+@SuiteClasses({ TestBPGImageEncoding.class, TestDicomImageConversion.class, TestImageProcessing.class,
+		TestImageConversion.class })
 public class AllTests {
 
 }
