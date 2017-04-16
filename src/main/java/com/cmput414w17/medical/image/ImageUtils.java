@@ -12,7 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
@@ -94,14 +97,16 @@ public class ImageUtils {
 					fileType));
 		}
 
+		String losslessParam = lossless ? "-lossless" : "";
+
 		if (SystemUtils.IS_OS_WINDOWS) {
 			// Runs on Windows only!
-			Process p = Runtime.getRuntime().exec(String.format("bin/bpg/win64/bpgenc.exe -o %s %s",
+			Process p = Runtime.getRuntime().exec(String.format("bin/bpg/win64/bpgenc.exe %s -o \"%s\" \"%s\"", losslessParam,
 					output.getAbsolutePath(), image.getAbsolutePath()));
 			p.waitFor();
 		} else if (SystemUtils.IS_OS_LINUX) {
-			Process p = Runtime.getRuntime()
-					.exec(String.format("bpgenc -o %s %s", output.getAbsolutePath(), image.getAbsolutePath()));
+			Process p = Runtime.getRuntime().exec(String.format("bpgenc %s -o \"%s\" \"%s\"", losslessParam,
+					output.getAbsolutePath(), image.getAbsolutePath()));
 			p.waitFor();
 		} else {
 			throw new UnsupportedOperationException("This operating system is not supported for BPG conversion!");
@@ -136,7 +141,7 @@ public class ImageUtils {
 	 *             PNG file could not be written.
 	 */
 	public static void convertImageToPng(BufferedImage bufferedImage, File output) throws IOException {
-		convertImageToFormat(bufferedImage, output, "png");
+		convertImageToFormat(bufferedImage, output, "png", 1.0f);
 	}
 
 	/**
@@ -148,13 +153,31 @@ public class ImageUtils {
 	 *            The output image file.
 	 * @param format
 	 *            The format to convert the input image into.
+	 * @param quality
+	 *            The quality between 0.0 (worst) and 1.0 (best) inclusively.
 	 * @throws IOException
 	 *             Thrown if the input image could not be read or if the output
 	 *             file could not be written.
 	 */
-	public static void convertImageToFormat(BufferedImage bufferedImage, File output, String format)
+	public static void convertImageToFormat(BufferedImage bufferedImage, File output, String format, float quality)
 			throws IOException {
-		ImageIO.write(bufferedImage, format, output);
+		// Based on code written by
+		// bobince (http://stackoverflow.com/users/18936/bobince)
+		// From http://stackoverflow.com/a/7619091/2557554 and licensed under
+		// CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+		ImageWriter writer = (ImageWriter) ImageIO.getImageWritersByFormatName(format).next();
+		ImageWriteParam param = writer.getDefaultWriteParam();
+
+		if (param.canWriteCompressed()) {
+			param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+
+			if (format.toLowerCase().equals("jpeg") || format.toLowerCase().equals("jpeg2000"))
+				param.setCompressionType(format.toUpperCase());
+			param.setCompressionQuality(quality);
+		}
+
+		writer.setOutput(ImageIO.createImageOutputStream(output));
+		writer.write(null, new IIOImage(bufferedImage, null, null), param);
 	}
 
 	public static void convertImageToJpeg2000(File image, File output) {

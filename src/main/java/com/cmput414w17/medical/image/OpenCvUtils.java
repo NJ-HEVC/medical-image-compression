@@ -39,7 +39,6 @@ public class OpenCvUtils {
 		Mat mask = new Mat();
 		Rect rect = new Rect();
 
-		// Imgproc.floodFill(frame, mask, seedPoint, newVal);
 		Imgproc.floodFill(output, mask, seedPoint, newVal, rect, loDiff, upDiff, Imgproc.FLOODFILL_FIXED_RANGE);
 
 		return output;
