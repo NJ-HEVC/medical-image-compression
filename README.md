@@ -51,3 +51,8 @@ BPG README: https://github.com/mirrorer/libbpg.
   bobince (http://stackoverflow.com/users/18936/bobince)
   From http://stackoverflow.com/a/7619091/2557554 and licensed under 
   CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+
+* Inverted flood-fill code based on the code and ideas of 
+  Michale Koval (http://stackoverflow.com/users/111426/michael-koval)
+  From http://stackoverflow.com/a/5740264/2557554 and licensed under 
+  CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)

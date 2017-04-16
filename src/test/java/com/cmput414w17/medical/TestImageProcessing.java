@@ -33,7 +33,7 @@ public class TestImageProcessing {
 		output.deleteOnExit();
 
 		if (output.exists())
-		output.delete();
+			output.delete();
 
 		Mat frame = Imgcodecs.imread(testFile.getAbsolutePath());
 
@@ -46,15 +46,35 @@ public class TestImageProcessing {
 	}
 
 	@Test
+	public void testInvertedFloodFill() throws IOException, UnsupportedFileTypeException {
+		File testFile = new File(getClass().getResource("test2.jpg").getFile());
+		File output = new File("floodfill_inverted.jpg");
+
+		output.deleteOnExit();
+
+		if (output.exists())
+			output.delete();
+
+		Mat original = Imgcodecs.imread(testFile.getAbsolutePath());
+		Mat floodFilled = OpenCvUtils.doBackgroundRemovalFloodFill(original, new Point(0, 0));
+		Mat invertedFloodFilled = OpenCvUtils.getFloodFilledRegion(original, floodFilled);
+
+		Imgcodecs.imwrite(output.getAbsolutePath(), invertedFloodFilled);
+
+		if (!output.exists())
+			Assert.fail(String.format("%s output file not found!", output.getName()));
+	}
+
+	@Test
 	public void testOrganizer() throws IOException {
 		String folder = "input";
 		URL testURL = getClass().getResource(folder);
-		if(testURL == null) {
+		if (testURL == null) {
 			throw new IllegalArgumentException(String.format("The input folder '%s' could not be found!", folder));
 		}
-		
+
 		File testDir = new File(testURL.getFile());
-		
+
 		ImageUtils.organizeInput(testDir);
 	}
 

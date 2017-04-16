@@ -1,5 +1,6 @@
 package com.cmput414w17.medical.image;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
@@ -28,6 +29,9 @@ public class OpenCvUtils {
 	// Code by Luigi De Russis
 	// https://github.com/opencv-java/image-segmentation
 	public static Mat doBackgroundRemovalFloodFill(Mat frame, Point point) {
+		Mat output = new Mat();
+		frame.copyTo(output);
+
 		Scalar newVal = new Scalar(255, 255, 255);
 		Scalar loDiff = new Scalar(50, 50, 50);
 		Scalar upDiff = new Scalar(50, 50, 50);
@@ -36,14 +40,34 @@ public class OpenCvUtils {
 		Rect rect = new Rect();
 
 		// Imgproc.floodFill(frame, mask, seedPoint, newVal);
-		Imgproc.floodFill(frame, mask, seedPoint, newVal, rect, loDiff, upDiff, Imgproc.FLOODFILL_FIXED_RANGE);
+		Imgproc.floodFill(output, mask, seedPoint, newVal, rect, loDiff, upDiff, Imgproc.FLOODFILL_FIXED_RANGE);
 
-		return frame;
+		return output;
 	}
 
-	public static Mat findRegionOfInterest(Mat frame){
-		
-		
-		return frame;
+	/**
+	 * Retrieve the inverted thresholded difference image between the original
+	 * image and the flood-filled image.
+	 * 
+	 * @param original
+	 *            The original image.
+	 * @param filled
+	 *            The original image with a portion flood-filled removed.
+	 * @return The inverted thresholded difference image.
+	 */
+	// Based on the code and ideas of 
+	// Michale Koval (http://stackoverflow.com/users/111426/michael-koval)
+	// From http://stackoverflow.com/a/5740264/2557554 and licensed under 
+	// CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+	public static Mat getFloodFilledRegion(Mat original, Mat filled) {
+		Mat dst = new Mat();
+		Core.absdiff(filled, original, dst);
+
+		// reduces false-positives
+		final int threshold = 10;
+
+		Imgproc.threshold(dst, dst, threshold, 255, Imgproc.THRESH_BINARY_INV);
+
+		return dst;
 	}
 }
