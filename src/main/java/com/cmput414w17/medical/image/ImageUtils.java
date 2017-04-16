@@ -1,17 +1,21 @@
 package com.cmput414w17.medical.image;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.log4j.Logger;
 import org.dcm4che3.tool.dcm2jpg.Dcm2Jpg;
 
 /**
@@ -21,6 +25,8 @@ import org.dcm4che3.tool.dcm2jpg.Dcm2Jpg;
  *
  */
 public class ImageUtils {
+
+	private static Logger LOGGER = Logger.getLogger(ImageUtils.class);
 
 	/**
 	 * Converts a DICOM (.dcm) image into the JPEG or PNG format.
@@ -98,46 +104,132 @@ public class ImageUtils {
 			throw new UnsupportedOperationException("This operating system is not supported for BPG conversion!");
 		}
 	}
-	
-	public static void organizeInput() throws FileNotFoundException, UnsupportedEncodingException{
-		PrintWriter writer = new PrintWriter("Image Size Distribution.txt", "UTF-8");
-		writer.println("Image Size Distribution");
-		File directory = new File("input");
+
+	/**
+	 * Organizes all the files in the given directory. Ignores sub-directories.
+	 * 
+	 * @param directory
+	 *            The directory containing images.
+	 * @throws IOException
+	 *             Thrown if there was a problem reading the image or creating
+	 *             new sub-directories.
+	 */
+	public static void organizeInput(File directory) throws IOException {
+
+		final class ImageDimension {
+			int width;
+			int height;
+
+			private ImageDimension(int width, int height) {
+				this.width = width;
+				this.height = height;
+			}
+
+			@Override
+			public String toString() {
+				return String.format("%dx%d", width, height);
+			}
+
+			@Override
+			public int hashCode() {
+				final int prime = 31;
+				int result = 1;
+				result = prime * result + height;
+				result = prime * result + width;
+				return result;
+			}
+
+			@Override
+			public boolean equals(Object obj) {
+				if (this == obj)
+					return true;
+				if (obj == null)
+					return false;
+				if (getClass() != obj.getClass())
+					return false;
+				ImageDimension other = (ImageDimension) obj;
+				if (height != other.height)
+					return false;
+				if (width != other.width)
+					return false;
+				return true;
+			}
+
+		}
+
 		File[] fList = directory.listFiles();
+
+		if (fList == null)
+			throw new IllegalArgumentException("The provided file path is not a valid directory!");
+
+		// Organize the files into a map as per their image dimensions
+		Map<ImageDimension, List<File>> imageDimensions = new HashMap<>();
+
 		for (final File file : fList) {
 			String imgName = file.getName();
+
+			if (file.isDirectory()) {
+				LOGGER.warn(String.format("Skipping files in directory '%s'", file.getName()));
+				continue;
+			}
+
 			try {
-				BufferedImage img = ImageIO.read(new File("input/" + imgName));
-				
-				if(img != null){
-					int res = img.getHeight();
-					String folderName = res + "x" + res;
+				BufferedImage img = ImageIO.read(new File(directory, imgName));
+
+				if (img != null) {
+					int width = img.getWidth();
+					int height = img.getHeight();
+
+					ImageDimension imageMeta = new ImageDimension(width, height);
+
+					if (imageDimensions.containsKey(imageMeta)) {
+						imageDimensions.get(imageMeta).add(file);
+					} else {
+						List<File> filesList = new ArrayList<>();
+						filesList.add(file);
+						imageDimensions.put(imageMeta, filesList);
+					}
+
+					String folderName = width + "x" + height;
 					File resFolder = new File("input/" + folderName);
 					boolean exists = resFolder.exists();
-					if(exists == false){
+					if (exists == false) {
 						resFolder.mkdir();
 						File imgFile = new File(resFolder + "/" + file.getName());
 						file.renameTo(imgFile);
-						
-					}else{
+					} else {
 						File imgFile = new File(resFolder + "/" + file.getName());
 						file.renameTo(imgFile);
 					}
 				}
-				
+
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error(e.getLocalizedMessage(), e);
+				throw e;
 			}
-			
 		}
-		fList = new File("input/512x512").listFiles();
-		writer.println("512x512: " + fList.length);
-		
-		fList = new File("input/378x378").listFiles();
-		writer.println("378x378: " + fList.length);
-		
-		writer.close();
+
+		// Iterate through each file, organized by their respective dimensions
+		LOGGER.info("Image Size Distribution");
+		for (Map.Entry<ImageDimension, List<File>> entry : imageDimensions.entrySet()) {
+			ImageDimension imageDimension = entry.getKey();
+			List<File> files = entry.getValue();
+
+			Path targetDir = Paths.get(new File(directory, imageDimension.toString()).toURI());
+			try {
+				Files.createDirectories(targetDir);
+			} catch (IOException e) {
+				LOGGER.error(e.getLocalizedMessage(), e);
+				throw e;
+			}
+
+			for (File file : files) {
+				File outputFile = new File(targetDir.toFile(), file.getName());
+				Files.move(file.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			LOGGER.info(String.format("%s: %d", imageDimension.toString(), files.size()));
+		}
 	}
 
 }

@@ -2,7 +2,9 @@ package com.cmput414w17.medical;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opencv.core.Mat;
@@ -20,6 +22,7 @@ public class TestImageProcessing {
 	static {
 		OpenCV.loadShared();
 		System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
+		BasicConfigurator.configure();
 	}
 
 	@Test
@@ -27,10 +30,10 @@ public class TestImageProcessing {
 		File testFile = new File(getClass().getResource("test2.jpg").getFile());
 		File output = new File("floodfill.jpg");
 
-		//output.deleteOnExit();
+		// output.deleteOnExit();
 
-		//if (output.exists())
-			//output.delete();
+		// if (output.exists())
+		// output.delete();
 
 		Mat frame = Imgcodecs.imread(testFile.getAbsolutePath());
 
@@ -41,9 +44,18 @@ public class TestImageProcessing {
 		if (!output.exists())
 			Assert.fail(String.format("%s output file not found!", output.getName()));
 	}
+
 	@Test
-	public void testOrganizor() throws IOException{
-		ImageUtils.organizeInput();
+	public void testOrganizer() throws IOException {
+		String folder = "input";
+		URL testURL = getClass().getResource(folder);
+		if(testURL == null) {
+			throw new IllegalArgumentException(String.format("The input folder '%s' could not be found!", folder));
+		}
+		
+		File testDir = new File(testURL.getFile());
+		
+		ImageUtils.organizeInput(testDir);
 	}
 
 }
