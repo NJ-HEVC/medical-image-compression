@@ -104,5 +104,7 @@
 
 	<properties>
 		<dcm4che-version>dcm4chee-arc-light-5.9.2</dcm4che-version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 </project>
