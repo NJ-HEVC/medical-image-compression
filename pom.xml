@@ -93,7 +93,7 @@
 							<resources>
 								<resource>
 									<directory>bin/bpg</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>
@@ -110,7 +110,7 @@
 							<resources>
 								<resource>
 									<directory>bin/bpg</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>
