@@ -59,13 +59,16 @@ public class MedicalImageController {
 
         tfDirectory.textProperty().addListener(listener -> btnConvert.setDisable(tfDirectory.getText().isEmpty()));
 
-        File defaultDirectory = new File("input");
+        File inputDirectory = new File("input");
+        File defaultDirectory;
 
-        if (defaultDirectory.exists() && defaultDirectory.isDirectory()) {
-            tfDirectory.setText(defaultDirectory.getAbsolutePath());
+        if (!inputDirectory.exists() || !inputDirectory.isDirectory()) {
+            defaultDirectory = new File(".");
         } else {
-            btnConvert.setDisable(true);
+            defaultDirectory = inputDirectory;
         }
+        
+        tfDirectory.setText(defaultDirectory.getAbsolutePath());
 
         btnSelectFolder.setOnAction(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
