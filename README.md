@@ -56,3 +56,9 @@ BPG README: https://github.com/mirrorer/libbpg.
   Michale Koval (http://stackoverflow.com/users/111426/michael-koval)
   From http://stackoverflow.com/a/5740264/2557554 and licensed under 
   CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+  
+* Progress double field idea by 
+  James_D (http://stackoverflow.com/users/2189127/james-d)
+  From http://stackoverflow.com/a/34358090/2557554 and licensed under
+  CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+

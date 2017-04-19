@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cmput414w17.medical.MedicalImageController">
+   <center>
+      <BorderPane>
+         <center>
+            <BorderPane BorderPane.alignment="CENTER">
+               <bottom>
+                  <HBox fx:id="paneFormats" spacing="10.0" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets top="5.0" />
+                     </BorderPane.margin>
+                  </HBox>
+               </bottom>
+               <center>
+                  <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" />
+                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                    </rowConstraints>
+                     <children>
+                        <Button fx:id="btnSelectFolder" mnemonicParsing="false" text="Select Folder" GridPane.columnIndex="1" />
+                        <TextField fx:id="tfDirectory" />
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </GridPane>
+               </center>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </BorderPane>
+         </center>
+         <bottom>
+            <GridPane BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ButtonBar GridPane.columnIndex="1">
+                    <buttons>
+                      <Button fx:id="btnConvert" defaultButton="true" mnemonicParsing="false" text="Run Conversion" />
+                        <Button fx:id="btnCancel" cancelButton="true" disable="true" mnemonicParsing="false" text="Cancel" />
+                    </buttons>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </ButtonBar>
+                  <Text fx:id="txtProgress" strokeType="OUTSIDE" strokeWidth="0.0">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </Text>
+               </children>
+            </GridPane>
+         </bottom>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </BorderPane>
+   </center>
+   <bottom>
+      <ProgressBar fx:id="pbProgress" maxWidth="1.7976931348623157E308" progress="0.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </ProgressBar>
+   </bottom>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
+</BorderPane>
