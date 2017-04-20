@@ -138,6 +138,11 @@ public class MedicalImageController {
 
                         Platform.runLater(() -> {
                             pbProgress.setProgress(processor.progressOverallProperty().get());
+                        });
+                    });
+                    
+                    processor.progressFilesProperty().addListener((obs, oldProgress, newProgress) -> {
+                        Platform.runLater(() -> {
                             txtProgress.setText(processor.progressFilesProperty().get());
                         });
                     });
